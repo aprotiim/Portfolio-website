@@ -1,0 +1,510 @@
+:root {
+    --bg: #112038;
+    --card: rgba(18, 34, 64, 0.85);
+    --card-2: rgba(15, 27, 54, 0.90);
+    --border: rgba(148, 163, 184, 0.16);
+    --text: #e5eefb;
+    --muted: #94a9c9;
+    --accent: #6ee7f9;
+    --accent-2: #a78bfa;
+}
+
+/* ── App background ─────────────────────────────────────────────────────────── */
+.stApp {
+    background:
+        radial-gradient(ellipse 70% 55% at 10% 0%, rgba(110,231,249,0.20), transparent 58%),
+        radial-gradient(ellipse 60% 50% at 90% 0%, rgba(167,139,250,0.16), transparent 55%),
+        radial-gradient(ellipse 45% 38% at 50% 105%, rgba(99,102,241,0.12), transparent 60%),
+        linear-gradient(165deg, #112038 0%, #162644 28%, #1c2a4e 55%, #141f3a 80%, #0f1628 100%);
+    color: var(--text);
+}
+
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    max-width: 1200px;
+}
+
+/* ── Base typography ────────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text);
+}
+
+p, li, label {
+    color: var(--text);
+}
+
+a {
+    color: var(--accent) !important;
+    text-decoration: none;
+}
+
+a:hover {
+    color: white !important;
+}
+
+/* ── Cards ──────────────────────────────────────────────────────────────────── */
+.hero-card, .section-card, .info-card, .project-card, .metric-card {
+    background: linear-gradient(135deg, rgba(21,38,72,0.82), rgba(14,26,54,0.90));
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 1.35rem 1.4rem;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+    margin-bottom: 1rem;
+}
+
+.hero-card {
+    padding: 1.8rem;
+}
+
+/* Equal heights for project cards */
+.project-card {
+    min-height: 460px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* ── Hero ───────────────────────────────────────────────────────────────────── */
+.eyebrow {
+    color: var(--accent) !important;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+}
+
+.hero-title {
+    font-size: 2.7rem;
+    line-height: 1.1;
+    margin: 0 0 0.7rem 0;
+    color: var(--text) !important;
+}
+
+.hero-title span {
+    color: var(--accent) !important;
+}
+
+.hero-subtitle {
+    font-size: 1.05rem;
+    color: var(--muted) !important;
+    line-height: 1.7;
+}
+
+/* ── Metric cards ───────────────────────────────────────────────────────────── */
+.metric-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: white !important;
+}
+
+.metric-label {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 0.1rem;
+    color: var(--text) !important;
+}
+
+.metric-caption {
+    color: var(--muted) !important;
+    font-size: 0.85rem;
+}
+
+/* ── Info & section cards ───────────────────────────────────────────────────── */
+.info-card h4, .section-card h3, .project-card h3 {
+    margin-top: 0;
+    color: var(--text) !important;
+}
+
+/* ── Project tag ────────────────────────────────────────────────────────────── */
+.project-tag {
+    display: inline-block;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(110,231,249,0.12) !important;
+    border: 1px solid rgba(110,231,249,0.18);
+    color: var(--accent) !important;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+/* ── Timeline ───────────────────────────────────────────────────────────────── */
+.timeline-item {
+    border-left: 3px solid rgba(110,231,249,0.35);
+    padding: 0.3rem 0 0.8rem 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.timeline-title {
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+    color: var(--text) !important;
+}
+
+.timeline-text {
+    color: var(--muted) !important;
+}
+
+/* ── Work experience ────────────────────────────────────────────────────────── */
+.experience-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.experience-header-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+}
+
+.experience-company {
+    color: var(--muted) !important;
+    font-size: 0.92rem;
+    margin-top: 0.15rem;
+}
+
+.experience-period {
+    color: var(--muted) !important;
+    font-size: 0.88rem;
+    white-space: nowrap;
+    padding-top: 0.25rem;
+}
+
+/* ── Company logo badges ────────────────────────────────────────────────────── */
+.company-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+    line-height: 1;
+    text-align: center;
+}
+
+.kpmg-badge {
+    background: linear-gradient(135deg, #00338D, #0050B3);
+    color: white !important;
+    border: 1px solid rgba(0, 51, 141, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 51, 141, 0.3);
+}
+
+.uf-badge {
+    background: linear-gradient(135deg, #003087, #FA4616);
+    color: white !important;
+    border: 1px solid rgba(250, 70, 22, 0.4);
+    box-shadow: 0 4px 12px rgba(250, 70, 22, 0.2);
+}
+
+/* ── Research badge ─────────────────────────────────────────────────────────── */
+.research-tag {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(110,231,249,0.10);
+    border: 1px solid rgba(110,231,249,0.22);
+    color: var(--accent) !important;
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+/* ── Sidebar ────────────────────────────────────────────────────────────────── */
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, rgba(12,20,42,0.98), rgba(11,18,38,0.98));
+    border-right: 1px solid var(--border);
+}
+
+[data-testid="stSidebarContent"] {
+    background: transparent !important;
+}
+
+[data-testid="stSidebarNav"] {
+    background: transparent !important;
+    padding-bottom: 0.5rem;
+}
+
+[data-testid="stSidebarNavItems"] {
+    padding-bottom: 0.5rem;
+}
+
+[data-testid="stSidebarNavLink"] {
+    border-radius: 8px;
+    margin-bottom: 2px;
+    background-color: transparent !important;
+}
+
+[data-testid="stSidebarNavLink"] p,
+[data-testid="stSidebarNavLink"] span,
+[data-testid="stSidebarNavLink"] div {
+    color: var(--text) !important;
+    font-size: 0.92rem;
+}
+
+[data-testid="stSidebarNavLink"]:hover {
+    background-color: rgba(110, 231, 249, 0.08) !important;
+}
+
+[data-testid="stSidebarNavLink"][aria-current="page"] {
+    background-color: rgba(110, 231, 249, 0.12) !important;
+    border-left: 3px solid var(--accent);
+}
+
+[data-testid="stBaseButton-headerNoPadding"],
+[data-testid="stBaseButton-header"],
+[data-testid="stSidebarCollapseButton"],
+button[kind="header"] {
+    color: white !important;
+    background-color: rgba(12, 20, 42, 0.9) !important;
+    border: 1px solid rgba(110,231,249,0.25) !important;
+    border-radius: 8px !important;
+    opacity: 1 !important;
+}
+
+[data-testid="stBaseButton-headerNoPadding"] svg,
+[data-testid="stBaseButton-header"] svg,
+[data-testid="stSidebarCollapseButton"] svg,
+button[kind="header"] svg {
+    fill: white !important;
+    color: white !important;
+    stroke: white !important;
+    opacity: 1 !important;
+}
+
+/* ── Download button ────────────────────────────────────────────────────────── */
+[data-testid="stDownloadButton"] > button {
+    border-radius: 999px !important;
+    border: 1px solid rgba(110,231,249,0.35) !important;
+    background: linear-gradient(90deg, rgba(110,231,249,0.18), rgba(167,139,250,0.18)) !important;
+    color: #e5eefb !important;
+    font-weight: 700 !important;
+    width: 100%;
+}
+
+[data-testid="stDownloadButton"] > button:hover {
+    border-color: rgba(110,231,249,0.6) !important;
+    background: linear-gradient(90deg, rgba(110,231,249,0.30), rgba(167,139,250,0.30)) !important;
+    color: white !important;
+}
+
+/* ── Form ───────────────────────────────────────────────────────────────────── */
+[data-testid="stForm"] {
+    background: linear-gradient(180deg, rgba(18,34,64,0.88), rgba(12,24,50,0.92));
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 1rem;
+}
+
+.stButton > button, .stFormSubmitButton > button {
+    border-radius: 999px;
+    border: 1px solid rgba(110,231,249,0.28);
+    background: linear-gradient(90deg, rgba(110,231,249,0.16), rgba(167,139,250,0.16));
+    color: white;
+    font-weight: 700;
+}
+
+/* ── Available badge ────────────────────────────────────────────────────────── */
+.available-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.28);
+    color: #4ade80 !important;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 0.9rem;
+}
+
+.available-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4ade80;
+    flex-shrink: 0;
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.45; transform: scale(0.85); }
+}
+
+/* ── CTA buttons ────────────────────────────────────────────────────────────── */
+.cta-buttons {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.3rem;
+    flex-wrap: wrap;
+}
+
+.cta-btn {
+    display: inline-block;
+    padding: 0.6rem 1.3rem;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none !important;
+}
+
+.cta-btn-primary {
+    background: linear-gradient(90deg, rgba(110,231,249,0.22), rgba(167,139,250,0.22));
+    border: 1px solid rgba(110,231,249,0.38);
+    color: white !important;
+}
+
+.cta-btn-primary:hover {
+    background: linear-gradient(90deg, rgba(110,231,249,0.38), rgba(167,139,250,0.38));
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(110,231,249,0.18);
+}
+
+.cta-btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted) !important;
+}
+
+.cta-btn-secondary:hover {
+    border-color: rgba(167,139,250,0.4);
+    color: var(--accent-2) !important;
+    transform: translateY(-2px);
+}
+
+/* ── Skill pills ────────────────────────────────────────────────────────────── */
+.skill-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 0.4rem;
+    margin-bottom: 0.7rem;
+}
+
+.skill-pill {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(167, 139, 250, 0.15) !important;
+    border: 1px solid rgba(167, 139, 250, 0.28) !important;
+    color: #c4b5fd !important;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+/* ── Tech pills ─────────────────────────────────────────────────────────────── */
+.tech-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+}
+
+.tech-pill {
+    display: inline-block;
+    padding: 0.18rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(110, 231, 249, 0.10) !important;
+    border: 1px solid rgba(110, 231, 249, 0.20) !important;
+    color: #93e8f7 !important;
+    font-size: 0.72rem;
+    font-weight: 500;
+}
+
+/* ── Role pills ─────────────────────────────────────────────────────────────── */
+.role-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+}
+
+.role-pill {
+    display: inline-block;
+    padding: 0.28rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(167, 139, 250, 0.15) !important;
+    border: 1px solid rgba(167, 139, 250, 0.28) !important;
+    color: #c4b5fd !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* ── Skill category label ───────────────────────────────────────────────────── */
+.skill-category {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--muted) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 0.3rem;
+    margin-top: 0.85rem;
+}
+
+/* ── Card hover transitions ─────────────────────────────────────────────────── */
+.project-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.38);
+    border-color: rgba(110, 231, 249, 0.30);
+}
+
+.info-card {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.info-card:hover {
+    border-color: rgba(167, 139, 250, 0.30);
+    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.30);
+}
+
+.metric-card {
+    transition: border-color 0.2s ease;
+}
+
+.metric-card:hover {
+    border-color: rgba(110, 231, 249, 0.26);
+}
+
+/* ── Equal-height columns ───────────────────────────────────────────────────── */
+[data-testid="stHorizontalBlock"] {
+    align-items: stretch;
+}
+
+[data-testid="stColumn"] > div[data-testid="stVerticalBlockBorderWrapper"],
+[data-testid="stColumn"] > div {
+    height: 100%;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .hero-title {
+        font-size: 2.1rem;
+    }
+    .experience-header {
+        flex-direction: column;
+    }
+    .cta-buttons {
+        flex-direction: column;
+    }
+    .experience-header-left {
+        flex-direction: row;
+    }
+}
