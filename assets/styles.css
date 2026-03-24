@@ -9,105 +9,55 @@
     --accent-2: #a78bfa;
 }
 
-/* ── Top nav ────────────────────────────────────────────────────────────────── */
-.topnav {
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding: 0.4rem 0 0.6rem 0;
-    margin-bottom: 0.5rem;
-}
-
-.topnav-links {
-    display: flex;
-    gap: 0.5rem;
-    width: 100%;
-    justify-content: space-around;
-}
-
-.topnav-links a {
+/* ── Desktop nav: st.page_link columns ──────────────────────────────────────── */
+[data-testid="stPageLink"] a,
+[data-testid="stPageLink"] button {
     background: transparent !important;
+    border: none !important;
     border-bottom: 2px solid transparent !important;
+    border-radius: 0 !important;
     color: #c8d8ed !important;
     font-size: 0.85rem !important;
     font-weight: 600 !important;
     letter-spacing: 0.07em !important;
     text-transform: uppercase !important;
-    text-decoration: none !important;
-    padding: 0.55rem 0.5rem !important;
     transition: color 0.2s, border-color 0.2s !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 0.55rem 0.25rem !important;
 }
 
-.topnav-links a:hover,
-.topnav-links a.active {
-    color: #ffffff !important;
+[data-testid="stPageLink"] a:hover,
+[data-testid="stPageLink"] button:hover {
+    background: transparent !important;
     border-bottom-color: var(--accent) !important;
+    color: #ffffff !important;
 }
 
-/* ── Hamburger checkbox (hidden) ─────────────────────────────────────────────── */
-.nav-toggle {
-    display: none;
-}
-
-/* ── Hamburger button (mobile only) ─────────────────────────────────────────── */
-.ham-btn {
-    display: none;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 28px;
-    height: 20px;
-    cursor: pointer;
-    padding: 0;
-    margin-left: auto;
-    z-index: 1000;
-}
-
-.ham-btn span {
-    display: block;
-    height: 2px;
-    width: 100%;
-    background: var(--accent);
-    border-radius: 2px;
-    transition: all 0.3s ease;
-}
-
-/* Animate to X when checked */
-.nav-toggle:checked ~ .ham-btn span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-.nav-toggle:checked ~ .ham-btn span:nth-child(2) { opacity: 0; }
-.nav-toggle:checked ~ .ham-btn span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
-
-/* ── Mobile dropdown menu ────────────────────────────────────────────────────── */
-.ham-menu {
-    display: none;
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: rgba(12, 20, 45, 0.98);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 0.5rem;
-    z-index: 999;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-}
-
-/* Open menu when checkbox is checked */
-.nav-toggle:checked ~ .ham-menu { display: flex; }
-
-.ham-menu a {
-    color: var(--text) !important;
-    text-decoration: none !important;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: background 0.2s;
-}
-
-.ham-menu a:hover {
-    background: rgba(110,231,249,0.10);
+[data-testid="stPageLink"][aria-current="page"] a,
+[data-testid="stPageLink"][aria-current="page"] button {
+    border-bottom: 2px solid var(--accent) !important;
     color: var(--accent) !important;
+}
+
+/* ── Mobile hamburger expander ───────────────────────────────────────────────── */
+/* Hide expander on desktop */
+[data-testid="stExpander"] {
+    display: none !important;
+}
+
+/* Style expander as hamburger on mobile */
+[data-testid="stExpander"] summary,
+[data-testid="stExpander"] [data-testid="stExpanderToggleIcon"] {
+    color: var(--accent) !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+}
+
+[data-testid="stExpander"] > details {
+    background: rgba(12,20,45,0.98) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
 }
 
 /* ── Hide sidebar and all toggle controls ───────────────────────────────────── */
@@ -672,9 +622,9 @@ a:hover {
 /* ── Mobile ──────────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
 
-    /* Nav: hide desktop links, show hamburger */
-    .topnav-links { display: none; }
-    .ham-btn { display: flex; }
+    /* Nav: hide desktop columns, show hamburger expander */
+    [data-testid="stExpander"] { display: block !important; }
+    [data-testid="stHorizontalBlock"]:has([data-testid="stPageLink"]) { display: none !important; }
 
     /* Block container padding */
     .block-container {
