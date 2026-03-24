@@ -9,6 +9,47 @@
     --accent-2: #a78bfa;
 }
 
+/* ── Hide sidebar and all toggle controls ───────────────────────────────────── */
+header[data-testid="stHeader"],
+[data-testid="stSidebar"],
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="stSidebarCollapseButton"] {
+    display: none !important;
+}
+
+/* ── Top nav: page link buttons ─────────────────────────────────────────────── */
+[data-testid="stPageLink"] a,
+[data-testid="stPageLink"] button {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid transparent !important;
+    border-radius: 0 !important;
+    color: rgba(148, 169, 201, 0.7) !important;
+    font-size: 0.82rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    transition: color 0.2s, border-color 0.2s !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 0.55rem 0.25rem !important;
+}
+
+[data-testid="stPageLink"] a:hover,
+[data-testid="stPageLink"] button:hover {
+    background: transparent !important;
+    border-bottom-color: rgba(110,231,249,0.45) !important;
+    color: #e5eefb !important;
+}
+
+[data-testid="stPageLink"][aria-current="page"] a,
+[data-testid="stPageLink"][aria-current="page"] button {
+    background: transparent !important;
+    border-bottom: 2px solid var(--accent) !important;
+    color: var(--accent) !important;
+    font-weight: 600 !important;
+}
+
 /* ── App background ─────────────────────────────────────────────────────────── */
 .stApp {
     background:
@@ -20,9 +61,11 @@
 }
 
 .block-container {
-    padding-top: 2rem;
+    padding-top: 1.5rem;
     padding-bottom: 2rem;
-    max-width: 1200px;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    max-width: 1400px;
 }
 
 /* ── Base typography ────────────────────────────────────────────────────────── */
@@ -51,6 +94,12 @@ a:hover {
     padding: 1.35rem 1.4rem;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
     margin-bottom: 1rem;
+}
+
+.metric-card {
+    padding: 0.7rem 0.6rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
 }
 
 .hero-card {
@@ -94,21 +143,21 @@ a:hover {
 
 /* ── Metric cards ───────────────────────────────────────────────────────────── */
 .metric-value {
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-weight: 800;
     color: white !important;
 }
 
 .metric-label {
-    font-size: 1rem;
+    font-size: 0.88rem;
     font-weight: 700;
-    margin-top: 0.1rem;
+    margin-top: 0.05rem;
     color: var(--text) !important;
 }
 
 .metric-caption {
     color: var(--muted) !important;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
 }
 
 /* ── Info & section cards ───────────────────────────────────────────────────── */
@@ -259,27 +308,6 @@ a:hover {
     border-left: 3px solid var(--accent);
 }
 
-[data-testid="stBaseButton-headerNoPadding"],
-[data-testid="stBaseButton-header"],
-[data-testid="stSidebarCollapseButton"],
-button[kind="header"] {
-    color: white !important;
-    background-color: rgba(12, 20, 42, 0.9) !important;
-    border: 1px solid rgba(110,231,249,0.25) !important;
-    border-radius: 8px !important;
-    opacity: 1 !important;
-}
-
-[data-testid="stBaseButton-headerNoPadding"] svg,
-[data-testid="stBaseButton-header"] svg,
-[data-testid="stSidebarCollapseButton"] svg,
-button[kind="header"] svg {
-    fill: white !important;
-    color: white !important;
-    stroke: white !important;
-    opacity: 1 !important;
-}
-
 /* ── Download button ────────────────────────────────────────────────────────── */
 [data-testid="stDownloadButton"] > button {
     border-radius: 999px !important;
@@ -353,7 +381,7 @@ button[kind="header"] svg {
 .cta-btn {
     display: inline-block;
     padding: 0.6rem 1.3rem;
-    border-radius: 999px;
+    border-radius: 12px;
     font-size: 0.88rem;
     font-weight: 700;
     cursor: pointer;
@@ -362,27 +390,30 @@ button[kind="header"] svg {
 }
 
 .cta-btn-primary {
-    background: linear-gradient(90deg, rgba(110,231,249,0.22), rgba(167,139,250,0.22));
-    border: 1px solid rgba(110,231,249,0.38);
-    color: white !important;
+    background: linear-gradient(90deg, rgba(110,231,249,0.28), rgba(167,139,250,0.28));
+    border: 1px solid rgba(110,231,249,0.55);
+    color: #ffffff !important;
+    font-weight: 700 !important;
 }
 
 .cta-btn-primary:hover {
-    background: linear-gradient(90deg, rgba(110,231,249,0.38), rgba(167,139,250,0.38));
-    color: white !important;
+    background: linear-gradient(90deg, rgba(110,231,249,0.45), rgba(167,139,250,0.45));
+    border-color: rgba(110,231,249,0.75);
+    color: #ffffff !important;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(110,231,249,0.18);
+    box-shadow: 0 6px 20px rgba(110,231,249,0.25);
 }
 
 .cta-btn-secondary {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted) !important;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(148,169,201,0.45);
+    color: #c8d8ed !important;
 }
 
 .cta-btn-secondary:hover {
-    border-color: rgba(167,139,250,0.4);
-    color: var(--accent-2) !important;
+    background: rgba(167,139,250,0.12);
+    border-color: rgba(167,139,250,0.65);
+    color: #e2d9fb !important;
     transform: translateY(-2px);
 }
 
@@ -483,6 +514,69 @@ button[kind="header"] svg {
     border-color: rgba(110, 231, 249, 0.26);
 }
 
+/* ── Side panel (photo + metrics) ───────────────────────────────────────────── */
+.side-panel {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.side-photo-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex: 1;
+}
+
+.hero-photo {
+    width: 150px !important;
+    height: 150px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+    border: 3px solid rgba(110,231,249,0.45) !important;
+    box-shadow: 0 0 24px rgba(110,231,249,0.22), 0 6px 24px rgba(0,0,0,0.4) !important;
+    display: block !important;
+}
+
+.side-metrics {
+    display: flex;
+    flex-direction: row;
+    gap: 0.4rem;
+    width: 100%;
+}
+
+.side-metrics .metric-card {
+    flex: 1;
+    padding: 0.65rem 0.3rem !important;
+    margin-bottom: 0 !important;
+    text-align: center;
+}
+
+.side-metrics .metric-value {
+    font-size: 1.3rem !important;
+}
+
+.side-metrics .metric-label {
+    font-size: 0.72rem !important;
+}
+
+.side-metrics .metric-caption {
+    font-size: 0.65rem !important;
+}
+
+.side-ctas {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 /* ── Equal-height columns ───────────────────────────────────────────────────── */
 [data-testid="stHorizontalBlock"] {
     align-items: stretch;
@@ -491,6 +585,11 @@ button[kind="header"] svg {
 [data-testid="stColumn"] > div[data-testid="stVerticalBlockBorderWrapper"],
 [data-testid="stColumn"] > div {
     height: 100%;
+}
+
+[data-testid="stColumn"] .hero-card {
+    height: 100%;
+    box-sizing: border-box;
 }
 
 /* ── Responsive ─────────────────────────────────────────────────────────────── */

@@ -25,37 +25,28 @@ def metric_card(label: str, value: str, caption: str = "") -> None:
     )
 
 
-# ── Hero + Metrics ─────────────────────────────────────────────────────────────
-col1, col2 = st.columns([2.5, 1], gap="large")
+# ── Hero + Right panel ─────────────────────────────────────────────────────────
+col1, col2 = st.columns([2.8, 1.6], gap="large")
 
 with col1:
-    resume_b64 = _resume_b64()
-    resume_btn = (
-        f"<a class='cta-btn cta-btn-primary' "
-        f"href='data:application/pdf;base64,{resume_b64}' "
-        f"download='Aprotiim_Joardar_AI_Engineer.pdf'>📄 Download Resume</a>"
-        if resume_b64 else ""
-    )
     st.markdown(
-        f"""
-        <div class='hero-card'>
-            <h1 class='hero-title' style='font-size:3.4rem;white-space:nowrap;margin-bottom:0.4rem;'>Hi, I'm <span>Aprotiim Joardar</span></h1>
-            <div class='eyebrow' style='font-size:1.15rem;margin-bottom:0.5rem;text-transform:none;letter-spacing:normal;'>AI Engineer building production-grade LLM systems and scalable AI products.</div>
-            <p style='font-size:1.0rem;font-weight:600;color:#e5eefb;margin:0 0 0.7rem 0;letter-spacing:0.03em;'>Ex-KPMG &nbsp;·&nbsp; University of Florida</p>
-            <p style='font-size:1.0rem;color:#e5eefb;line-height:1.7;margin:0 0 0.5rem 0;'>
-            I design systems that combine data engineering, machine learning, and GenAI — with a focus on reliability, performance, and real-world impact.
-            </p>
-            <p style='font-size:1.0rem;color:#e5eefb;line-height:1.7;margin:0 0 0.9rem 0;'>
-            I care about building AI systems that actually work outside notebooks — in real-world environments.
-            </p>
-            <div class='available-badge' style='margin-bottom:1rem;'>
-                <span class='available-dot'></span>
-                🚀 Open to AI Engineer / ML Engineer / Data Scientist roles
+        """
+        <div class='hero-card' style='height:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;'>
+            <div>
+                <h1 class='hero-title' style='font-size:3rem;margin-bottom:0.5rem;'>Hi, I'm <span>Aprotiim Joardar</span></h1>
+                <div class='eyebrow' style='font-size:1.1rem;margin-bottom:0.6rem;text-transform:none;letter-spacing:normal;'>AI Engineer building production-grade LLM systems and scalable AI products.</div>
+                <p style='font-size:1.0rem;font-weight:600;color:#e5eefb;margin:0 0 0.8rem 0;letter-spacing:0.03em;'>Ex-KPMG &nbsp;·&nbsp; University of Florida</p>
+                <p style='font-size:1.0rem;color:#e5eefb;line-height:1.7;margin:0 0 0.8rem 0;'>
+                I design systems that combine data engineering, machine learning, and GenAI — built for reliability and real-world scale, not just notebooks.
+                </p>
+                <div class='available-badge'>
+                    <span class='available-dot'></span>
+                    🚀 Open to AI Engineer / ML Engineer / Data Scientist roles
+                </div>
             </div>
-            <div class='cta-buttons'>
+            <div class='cta-buttons' style='margin-top:1.2rem;'>
                 <a class='cta-btn cta-btn-primary' href='https://github.com/aprotiim' target='_blank'>View AI Projects ↗</a>
-                {resume_btn}
-                <a class='cta-btn cta-btn-primary' href='/Contact'>Connect with me ↗</a>
+                <a class='cta-btn cta-btn-secondary' href='/Contact'>Connect with me ↗</a>
             </div>
         </div>
         """,
@@ -63,9 +54,42 @@ with col1:
     )
 
 with col2:
-    metric_card("Years of experience", "5+", "Data science, ML systems, and analytics engineering")
-    metric_card("Graduate GPA", "3.91", "M.S. in Information Systems & Operations Management")
-    metric_card("Pipeline scale handled", "20TB+", "Enterprise data engineering at KPMG")
+    resume_b64 = _resume_b64()
+    resume_btn = (
+        f"<a class='cta-btn cta-btn-primary' "
+        f"href='data:application/pdf;base64,{resume_b64}' "
+        f"target='_blank' "
+        f"style='background:linear-gradient(90deg,#0e7490,#6d28d9);color:#ffffff!important;font-weight:700;font-size:0.9rem;letter-spacing:0.04em;border:none;border-radius:12px;box-shadow:0 4px 20px rgba(110,231,249,0.25);width:100%;text-align:center;display:block;padding:0.65rem 1rem;'>📄 Resume ↗</a>"
+        if resume_b64 else ""
+    )
+    photo_path = ROOT / "assets" / "photo.jpeg"
+    photo_b64 = base64.b64encode(photo_path.read_bytes()).decode() if photo_path.exists() else None
+    photo_tag = (
+        f"<img src='data:image/jpeg;base64,{photo_b64}' class='hero-photo'>"
+        if photo_b64 else ""
+    )
+    st.markdown(
+        f"""
+        <div class='hero-card side-panel'>
+            <div class='side-photo-wrap'>
+                {photo_tag}
+                <div style='text-align:center;margin-top:0.6rem;font-size:0.78rem;font-weight:600;color:#94a9c9;letter-spacing:0.04em;'>
+                    AI Engineer &nbsp;·&nbsp; ML Engineer &nbsp;·&nbsp; Data Scientist
+                </div>
+            </div>
+            <div class='side-metrics'>
+                <div class='metric-card'><div class='metric-value'>5+</div><div class='metric-label'>Experience</div><div class='metric-caption'>Years</div></div>
+                <div class='metric-card'><div class='metric-value'>3.91</div><div class='metric-label'>GPA</div><div class='metric-caption'>Graduate</div></div>
+                <div class='metric-card'><div class='metric-value'>20TB+</div><div class='metric-label'>Data Scale</div><div class='metric-caption'>at KPMG</div></div>
+            </div>
+            <div class='side-ctas'>
+                {resume_btn}
+                <a class='cta-btn cta-btn-secondary' href='https://www.linkedin.com/in/aprotiim-joardar-595074118/' target='_blank' style='width:100%;text-align:center;display:block;border-radius:12px;font-size:0.9rem;letter-spacing:0.04em;'>💼 LinkedIn ↗</a>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # ── Featured Projects (full width) ─────────────────────────────────────────────
 st.markdown("### Featured Projects")
@@ -110,7 +134,7 @@ for col, p in zip(proj_cols, featured):
     img_pos = p.get("img_pos", "center center")
     img_html = (
         f"<img src='data:image/png;base64,{b64}' "
-        f"style='width:100%;height:180px;object-fit:cover;object-position:{img_pos};display:block;'>"
+        f"style='width:100%;height:auto;display:block;'>"
     ) if b64 else ""
     with col:
         st.markdown(
@@ -151,7 +175,7 @@ st.markdown(
 )
 
 # ── What recruiters should know ────────────────────────────────────────────────
-st.markdown("### What recruiters should know")
+st.markdown("### What I bring")
 rec_col1, rec_col2, rec_col3 = st.columns(3, gap="large")
 
 with rec_col1:
