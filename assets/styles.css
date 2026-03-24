@@ -9,6 +9,103 @@
     --accent-2: #a78bfa;
 }
 
+/* ── Top nav ────────────────────────────────────────────────────────────────── */
+.topnav {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0.4rem 0 0.6rem 0;
+    margin-bottom: 0.5rem;
+}
+
+.topnav-links {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.topnav-links a {
+    background: transparent !important;
+    border-bottom: 2px solid transparent !important;
+    color: rgba(148,169,201,0.7) !important;
+    font-size: 0.82rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    padding: 0.55rem 0.5rem !important;
+    transition: color 0.2s, border-color 0.2s !important;
+}
+
+.topnav-links a:hover,
+.topnav-links a.active {
+    color: var(--accent) !important;
+    border-bottom-color: var(--accent) !important;
+}
+
+/* ── Hamburger button (mobile only) ─────────────────────────────────────────── */
+.ham-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 28px;
+    height: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: auto;
+    z-index: 1000;
+}
+
+.ham-btn span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.ham-btn.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+.ham-btn.active span:nth-child(2) { opacity: 0; }
+.ham-btn.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+/* ── Mobile dropdown menu ────────────────────────────────────────────────────── */
+.ham-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(12, 20, 45, 0.98);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.5rem;
+    z-index: 999;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.ham-menu.open { display: flex; }
+
+.ham-menu a {
+    color: var(--text) !important;
+    text-decoration: none !important;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.ham-menu a:hover,
+.ham-menu a.active {
+    background: rgba(110,231,249,0.10);
+    color: var(--accent) !important;
+}
+
 /* ── Hide sidebar and all toggle controls ───────────────────────────────────── */
 header[data-testid="stHeader"],
 [data-testid="stSidebar"],
@@ -17,38 +114,6 @@ header[data-testid="stHeader"],
     display: none !important;
 }
 
-/* ── Top nav: page link buttons ─────────────────────────────────────────────── */
-[data-testid="stPageLink"] a,
-[data-testid="stPageLink"] button {
-    background: transparent !important;
-    border: none !important;
-    border-bottom: 2px solid transparent !important;
-    border-radius: 0 !important;
-    color: rgba(148, 169, 201, 0.7) !important;
-    font-size: 0.82rem !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.06em !important;
-    text-transform: uppercase !important;
-    transition: color 0.2s, border-color 0.2s !important;
-    width: 100% !important;
-    text-align: center !important;
-    padding: 0.55rem 0.25rem !important;
-}
-
-[data-testid="stPageLink"] a:hover,
-[data-testid="stPageLink"] button:hover {
-    background: transparent !important;
-    border-bottom-color: rgba(110,231,249,0.45) !important;
-    color: #e5eefb !important;
-}
-
-[data-testid="stPageLink"][aria-current="page"] a,
-[data-testid="stPageLink"][aria-current="page"] button {
-    background: transparent !important;
-    border-bottom: 2px solid var(--accent) !important;
-    color: var(--accent) !important;
-    font-weight: 600 !important;
-}
 
 /* ── App background ─────────────────────────────────────────────────────────── */
 .stApp {
@@ -594,16 +659,62 @@ a:hover {
 
 /* ── Responsive ─────────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
-    .hero-title {
-        font-size: 2.1rem;
+    .hero-title { font-size: 2.1rem; }
+    .experience-header { flex-direction: column; }
+    .cta-buttons { flex-direction: column; }
+    .experience-header-left { flex-direction: row; }
+}
+
+/* ── Mobile ──────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+
+    /* Nav: hide desktop links, show hamburger */
+    .topnav-links { display: none; }
+    .ham-btn { display: flex; }
+
+    /* Block container padding */
+    .block-container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        padding-top: 1rem !important;
     }
-    .experience-header {
-        flex-direction: column;
+
+    /* Stack all Streamlit columns */
+    [data-testid="stHorizontalBlock"] {
+        flex-direction: column !important;
     }
-    .cta-buttons {
-        flex-direction: column;
+
+    [data-testid="stColumn"] {
+        width: 100% !important;
+        min-width: 100% !important;
+        flex: 1 1 100% !important;
     }
-    .experience-header-left {
-        flex-direction: row;
+
+    /* Hero */
+    .hero-title { font-size: 2rem !important; }
+
+    /* Side panel stacks below hero */
+    .side-panel {
+        margin-top: 0 !important;
     }
+
+    .hero-photo {
+        width: 110px !important;
+        height: 110px !important;
+    }
+
+    /* Metric cards stay horizontal but smaller */
+    .side-metrics .metric-value { font-size: 1rem !important; }
+    .side-metrics .metric-label { font-size: 0.65rem !important; }
+    .side-metrics .metric-caption { font-size: 0.58rem !important; }
+
+    /* Full-width CTAs */
+    .cta-buttons { flex-direction: column; }
+    .cta-btn { width: 100% !important; text-align: center !important; display: block !important; }
+
+    /* Project cards stack */
+    .project-card { min-height: auto; }
+
+    /* Experience header */
+    .experience-header { flex-direction: column; }
 }
