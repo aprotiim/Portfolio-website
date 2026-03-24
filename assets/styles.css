@@ -28,10 +28,10 @@
 .topnav-links a {
     background: transparent !important;
     border-bottom: 2px solid transparent !important;
-    color: rgba(148,169,201,0.7) !important;
-    font-size: 0.82rem !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.06em !important;
+    color: #c8d8ed !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.07em !important;
     text-transform: uppercase !important;
     text-decoration: none !important;
     padding: 0.55rem 0.5rem !important;
@@ -40,8 +40,13 @@
 
 .topnav-links a:hover,
 .topnav-links a.active {
-    color: var(--accent) !important;
+    color: #ffffff !important;
     border-bottom-color: var(--accent) !important;
+}
+
+/* ── Hamburger checkbox (hidden) ─────────────────────────────────────────────── */
+.nav-toggle {
+    display: none;
 }
 
 /* ── Hamburger button (mobile only) ─────────────────────────────────────────── */
@@ -51,8 +56,6 @@
     justify-content: space-between;
     width: 28px;
     height: 20px;
-    background: transparent;
-    border: none;
     cursor: pointer;
     padding: 0;
     margin-left: auto;
@@ -68,9 +71,10 @@
     transition: all 0.3s ease;
 }
 
-.ham-btn.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-.ham-btn.active span:nth-child(2) { opacity: 0; }
-.ham-btn.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+/* Animate to X when checked */
+.nav-toggle:checked ~ .ham-btn span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+.nav-toggle:checked ~ .ham-btn span:nth-child(2) { opacity: 0; }
+.nav-toggle:checked ~ .ham-btn span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
 
 /* ── Mobile dropdown menu ────────────────────────────────────────────────────── */
 .ham-menu {
@@ -88,7 +92,8 @@
     box-shadow: 0 8px 32px rgba(0,0,0,0.5);
 }
 
-.ham-menu.open { display: flex; }
+/* Open menu when checkbox is checked */
+.nav-toggle:checked ~ .ham-menu { display: flex; }
 
 .ham-menu a {
     color: var(--text) !important;
@@ -100,8 +105,7 @@
     transition: background 0.2s;
 }
 
-.ham-menu a:hover,
-.ham-menu a.active {
+.ham-menu a:hover {
     background: rgba(110,231,249,0.10);
     color: var(--accent) !important;
 }

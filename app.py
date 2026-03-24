@@ -31,6 +31,7 @@ pg = st.navigation([
 # ── Navigation bar (desktop tabs + mobile hamburger) ──────────────────────────
 st.markdown("""
 <nav class="topnav">
+    <input type="checkbox" id="nav-toggle" class="nav-toggle">
     <div class="topnav-links">
         <a href="/home">🏠 Home</a>
         <a href="/about">👋 About</a>
@@ -39,10 +40,10 @@ st.markdown("""
         <a href="/education">🎓 Education</a>
         <a href="/contact">📬 Contact</a>
     </div>
-    <button class="ham-btn" id="hamBtn" aria-label="Menu">
+    <label for="nav-toggle" class="ham-btn" aria-label="Menu">
         <span></span><span></span><span></span>
-    </button>
-    <div class="ham-menu" id="hamMenu">
+    </label>
+    <div class="ham-menu">
         <a href="/home">🏠 Home</a>
         <a href="/about">👋 About</a>
         <a href="/projects">🧠 Projects</a>
@@ -51,25 +52,6 @@ st.markdown("""
         <a href="/contact">📬 Contact</a>
     </div>
 </nav>
-<script>
-(function() {
-    var btn = document.getElementById('hamBtn');
-    var menu = document.getElementById('hamMenu');
-    if (btn) {
-        btn.addEventListener('click', function() {
-            btn.classList.toggle('active');
-            menu.classList.toggle('open');
-        });
-    }
-    // Highlight current page
-    var path = window.location.pathname;
-    document.querySelectorAll('.topnav-links a, .ham-menu a').forEach(function(a) {
-        if (a.getAttribute('href') === path || (path === '/' && a.getAttribute('href') === '/home')) {
-            a.classList.add('active');
-        }
-    });
-})();
-</script>
 """, unsafe_allow_html=True)
 
 pg.run()
