@@ -54,19 +54,32 @@ with col2:
         unsafe_allow_html=True,
     )
 
-    resume_path = ROOT / "assets" / "APROTIIM_JOARDAR_AI_ML_Engineer_final.pdf"
-    if resume_path.exists():
-        with open(resume_path, "rb") as f:
-            st.download_button(
-                label="📄 Download Resume",
-                data=f,
-                file_name="Aprotiim_Joardar_AI_Engineer.pdf",
-                mime="application/pdf",
-                use_container_width=True,
-            )
+    st.markdown(
+        "<a href='https://drive.google.com/file/d/1SIHWqU4BHVdD-UPSufSrRsTx6cXv5-pS/view?usp=drive_link' target='_blank' style='"
+        "display:block;width:100%;text-align:center;padding:0.65rem 1rem;"
+        "background:linear-gradient(90deg,#0e7490,#6d28d9);color:#fff!important;"
+        "font-weight:700;font-size:0.9rem;border-radius:12px;text-decoration:none!important;"
+        "box-shadow:0 4px 20px rgba(110,231,249,0.25);margin-bottom:1rem;'>"
+        "📄 View Resume ↗</a>",
+        unsafe_allow_html=True,
+    )
 
     with st.form("contact_form"):
-        st.text_input("Name")
-        st.text_input("Email")
-        st.text_area("Message", height=180)
-        st.form_submit_button("Send")
+        name    = st.text_input("Your Name")
+        email   = st.text_input("Your Email")
+        message = st.text_area("Message", height=180)
+        submitted = st.form_submit_button("Send Message", use_container_width=True)
+
+    if submitted:
+        if name and email and message:
+            subject = f"Portfolio Inquiry from {name}"
+            body    = f"Name: {name}\nEmail: {email}\n\n{message}"
+            import urllib.parse
+            mailto = f"mailto:aprotiim@gmail.com?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
+            st.markdown(
+                f"<meta http-equiv='refresh' content='0; url={mailto}'>",
+                unsafe_allow_html=True,
+            )
+            st.success("Opening your email client... ✅")
+        else:
+            st.warning("Please fill in all fields before sending.")

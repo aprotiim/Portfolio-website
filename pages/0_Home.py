@@ -5,11 +5,6 @@ import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[1]
 
-def _resume_b64():
-    path = ROOT / "assets" / "APROTIIM_JOARDAR_AI_ML_Engineer_final.pdf"
-    if path.exists():
-        return base64.b64encode(path.read_bytes()).decode()
-    return None
 
 
 def metric_card(label: str, value: str, caption: str = "") -> None:
@@ -54,14 +49,6 @@ with col1:
     )
 
 with col2:
-    resume_b64 = _resume_b64()
-    resume_btn = (
-        f"<a class='cta-btn cta-btn-primary' "
-        f"href='data:application/pdf;base64,{resume_b64}' "
-        f"target='_blank' "
-        f"style='background:linear-gradient(90deg,#0e7490,#6d28d9);color:#ffffff!important;font-weight:700;font-size:0.9rem;letter-spacing:0.04em;border:none;border-radius:12px;box-shadow:0 4px 20px rgba(110,231,249,0.25);width:100%;text-align:center;display:block;padding:0.65rem 1rem;'>📄 Resume ↗</a>"
-        if resume_b64 else ""
-    )
     photo_path = ROOT / "assets" / "photo.jpeg"
     photo_b64 = base64.b64encode(photo_path.read_bytes()).decode() if photo_path.exists() else None
     photo_tag = (
@@ -82,10 +69,24 @@ with col2:
                 <div class='metric-card'><div class='metric-value'>3.91</div><div class='metric-label'>GPA</div><div class='metric-caption'>Graduate</div></div>
                 <div class='metric-card'><div class='metric-value'>20TB+</div><div class='metric-label'>Data Scale</div><div class='metric-caption'>at KPMG</div></div>
             </div>
-            <div class='side-ctas'>
-                {resume_btn}
-                <a class='cta-btn cta-btn-secondary' href='https://www.linkedin.com/in/aprotiim-joardar-595074118/' target='_blank' style='width:100%;text-align:center;display:block;border-radius:12px;font-size:0.9rem;letter-spacing:0.04em;'>💼 LinkedIn ↗</a>
-            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        """
+        <div class='side-ctas'>
+            <a href='https://drive.google.com/file/d/1SIHWqU4BHVdD-UPSufSrRsTx6cXv5-pS/view?usp=drive_link' target='_blank'
+               style='background:linear-gradient(90deg,#0e7490,#6d28d9);color:#ffffff!important;
+                      font-weight:700;font-size:0.9rem;letter-spacing:0.04em;border:none;
+                      border-radius:12px;box-shadow:0 4px 20px rgba(110,231,249,0.25);
+                      width:100%;text-align:center;display:block;padding:0.65rem 1rem;
+                      text-decoration:none!important;'>📄 Resume ↗</a>
+            <a class='cta-btn cta-btn-secondary' href='https://www.linkedin.com/in/aprotiim-joardar-595074118/'
+               target='_blank'
+               style='width:100%;text-align:center;display:block;border-radius:12px;font-size:0.9rem;letter-spacing:0.04em;'>
+               💼 LinkedIn ↗</a>
         </div>
         """,
         unsafe_allow_html=True,

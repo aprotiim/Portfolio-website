@@ -327,19 +327,23 @@ a:hover {
     border-left: 3px solid var(--accent);
 }
 
-/* ── Download button ────────────────────────────────────────────────────────── */
+/* ── Resume download button ──────────────────────────────────────────────────── */
 [data-testid="stDownloadButton"] > button {
-    border-radius: 999px !important;
-    border: 1px solid rgba(110,231,249,0.35) !important;
-    background: linear-gradient(90deg, rgba(110,231,249,0.18), rgba(167,139,250,0.18)) !important;
-    color: #e5eefb !important;
+    border-radius: 12px !important;
+    border: none !important;
+    background: linear-gradient(90deg, #0e7490, #6d28d9) !important;
+    color: #ffffff !important;
     font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    letter-spacing: 0.04em !important;
+    box-shadow: 0 4px 20px rgba(110,231,249,0.25) !important;
     width: 100%;
+    padding: 0.65rem 1rem !important;
 }
 
 [data-testid="stDownloadButton"] > button:hover {
-    border-color: rgba(110,231,249,0.6) !important;
-    background: linear-gradient(90deg, rgba(110,231,249,0.30), rgba(167,139,250,0.30)) !important;
+    background: linear-gradient(90deg, #0891b2, #7c3aed) !important;
+    box-shadow: 0 6px 24px rgba(110,231,249,0.35) !important;
     color: white !important;
 }
 
