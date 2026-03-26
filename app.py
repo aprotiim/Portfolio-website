@@ -83,7 +83,7 @@ _SYSTEM = (
 )
 
 _CSS = (
-    "#cw-root{position:fixed;bottom:24px;right:24px;z-index:2147483647;"
+    "#cw-root{position:fixed;top:80px;right:24px;z-index:2147483647;"
     "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}"
 
     "#cw-btn{width:56px;height:56px;border-radius:50%;"
@@ -93,12 +93,12 @@ _CSS = (
     "margin-left:auto;}"
     "#cw-btn:hover{transform:scale(1.09);box-shadow:0 6px 32px rgba(110,231,249,.55);}"
 
-    "#cw-panel{position:absolute;bottom:68px;right:0;width:340px;height:490px;"
+    "#cw-panel{position:absolute;top:68px;right:0;width:340px;height:490px;"
     "background:rgba(8,14,36,.97);border:1px solid rgba(148,163,184,.18);border-radius:18px;"
     "box-shadow:0 20px 64px rgba(0,0,0,.65);display:flex;flex-direction:column;overflow:hidden;"
-    "transform:scale(.88) translateY(14px);opacity:0;pointer-events:none;"
+    "transform:scale(.88) translateY(-14px);opacity:0;pointer-events:none;"
     "transition:transform .28s cubic-bezier(.34,1.56,.64,1),opacity .2s;"
-    "transform-origin:bottom right;}"
+    "transform-origin:top right;}"
     "#cw-panel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}"
 
     "#cw-header{padding:13px 14px;"
@@ -153,7 +153,7 @@ _CSS = (
     "#cw-snd:disabled{opacity:.35;cursor:not-allowed;transform:none;}"
 
     "@media(max-width:420px){"
-    "#cw-panel{width:calc(100vw - 32px);right:-4px;height:430px;}"
+    "#cw-panel{width:calc(100vw - 32px);right:-4px;height:430px;top:68px;}"
     "}"
 )
 
