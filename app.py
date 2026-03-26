@@ -197,12 +197,12 @@ _JS = f"""
   `;
   par.body.appendChild(root);
 
-  par.getElementById('cw-btn').onclick = toggle;
-  par.getElementById('cw-x').onclick   = toggle;
-  par.getElementById('cw-snd').onclick  = doSend;
-  par.getElementById('cw-inp').onkeydown = function(e){{
+  par.getElementById('cw-btn').addEventListener('click', toggle);
+  par.getElementById('cw-x').addEventListener('click', toggle);
+  par.getElementById('cw-snd').addEventListener('click', doSend);
+  par.getElementById('cw-inp').addEventListener('keydown', function(e){{
     if(e.key === 'Enter' && !e.shiftKey){{ e.preventDefault(); doSend(); }}
-  }};
+  }});
 
   function toggle(){{
     var panel = par.getElementById('cw-panel');
@@ -212,7 +212,7 @@ _JS = f"""
     if(open) setTimeout(function(){{ par.getElementById('cw-inp').focus(); }}, 280);
   }}
 
-  async function doSend(){{
+  function doSend(){{
     var inp = par.getElementById('cw-inp');
     var snd = par.getElementById('cw-snd');
     var txt = inp.value.trim();
@@ -222,37 +222,40 @@ _JS = f"""
     addMsg('u', txt);
     hist.push({{role:'user', content:txt}});
     var typ = addTyping();
-    try{{
-      var res = await fetch('https://api.anthropic.com/v1/messages', {{
-        method: 'POST',
-        headers: {{
-          'x-api-key': KEY,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-          'content-type': 'application/json'
-        }},
-        body: JSON.stringify({{
-          model: 'claude-haiku-4-5',
-          max_tokens: 512,
-          system: SYS,
-          messages: hist
-        }})
-      }});
+
+    fetch('https://api.anthropic.com/v1/messages', {{
+      method: 'POST',
+      headers: {{
+        'x-api-key': KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+        'content-type': 'application/json'
+      }},
+      body: JSON.stringify({{
+        model: 'claude-haiku-4-5',
+        max_tokens: 512,
+        system: SYS,
+        messages: hist
+      }})
+    }})
+    .then(function(res){{
       typ.remove();
-      if(res.ok){{
-        var d = await res.json();
-        var reply = d.content[0].text;
-        addMsg('a', reply);
-        hist.push({{role:'assistant', content:reply}});
-      }} else {{
-        addMsg('a', 'Sorry, something went wrong. Please try again.');
-      }}
-    }} catch(e){{
+      if(res.ok) return res.json();
+      addMsg('a', 'Sorry, something went wrong. Please try again.');
+      snd.disabled = false; inp.focus();
+    }})
+    .then(function(d){{
+      if(!d) return;
+      var reply = d.content[0].text;
+      addMsg('a', reply);
+      hist.push({{role:'assistant', content:reply}});
+      snd.disabled = false; inp.focus();
+    }})
+    .catch(function(){{
       typ.remove();
       addMsg('a', 'Connection error. Please try again.');
-    }}
-    snd.disabled = false;
-    inp.focus();
+      snd.disabled = false; inp.focus();
+    }});
   }}
 
   function addMsg(role, text){{
