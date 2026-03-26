@@ -213,4 +213,64 @@ with rec_col3:
     )
 
 st.markdown("---")
+
+# ── Recruiter TL;DR ────────────────────────────────────────────────────────────
+if "show_tldr" not in st.session_state:
+    st.session_state.show_tldr = False
+
+col_btn, _ = st.columns([1, 3])
+with col_btn:
+    label = "✕  Close Summary" if st.session_state.show_tldr else "📋  Recruiter TL;DR"
+    if st.button(label, use_container_width=True, type="secondary"):
+        st.session_state.show_tldr = not st.session_state.show_tldr
+        st.rerun()
+
+if st.session_state.show_tldr:
+    with st.container(border=True):
+        st.markdown("#### Aprotiim Joardar &nbsp;·&nbsp; AI / ML Engineer &nbsp;·&nbsp; Florida, USA *(open to relocation)*")
+
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            st.markdown("**🗓 Experience**")
+            st.markdown("5+ years")
+            st.caption("Data Eng → ML → GenAI")
+        with c2:
+            st.markdown("**🎓 Education**")
+            st.markdown("M.S. ISOM — Data Science")
+            st.caption("Univ. of Florida · GPA 3.91")
+        with c3:
+            st.markdown("**🎯 Target Roles**")
+            st.markdown("AI / ML Engineer")
+            st.caption("Data Scientist · Applied LLM")
+
+        st.divider()
+
+        st.markdown("**Core Skills**")
+        skills = ["Python", "LangChain / LlamaIndex", "Agentic AI", "RAG Systems",
+                  "PyTorch / TensorFlow", "PySpark", "AWS / GCP", "MLflow / Docker", "SQL / dbt"]
+        st.markdown(" &nbsp; ".join(
+            f"`{s}`" for s in skills
+        ))
+
+        st.divider()
+
+        st.markdown("**Top Projects**")
+        st.markdown(
+            "🔹 **AI Agent Blog Writer** — Multi-agent LangGraph pipeline, end-to-end content generation  \n"
+            "🔹 **Self-RAG** — Self-reflective retrieval with quality-gated rewriting  \n"
+            "🔹 **Corrective RAG** — Confidence-scored retrieval + web fallback · −40% hallucinations"
+        )
+
+        st.divider()
+
+        a1, a2, a3, a4 = st.columns(4)
+        with a1:
+            st.success("🟢 Available now")
+        with a2:
+            st.link_button("✉ Email", "mailto:aprotiim@gmail.com", use_container_width=True)
+        with a3:
+            st.link_button("💼 LinkedIn", "https://www.linkedin.com/in/aprotiim-joardar-595074118/", use_container_width=True)
+        with a4:
+            st.link_button("📄 Resume", "https://drive.google.com/file/d/1SIHWqU4BHVdD-UPSufSrRsTx6cXv5-pS/view?usp=drive_link", use_container_width=True)
+
 st.caption("Built with Streamlit · AI/ML Engineer portfolio · aprotiim@gmail.com")

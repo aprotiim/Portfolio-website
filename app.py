@@ -51,233 +51,147 @@ for col, (page, label) in zip(cols, nav_pages):
 
 pg.run()
 
-# ── Floating Chat Widget ───────────────────────────────────────────────────────
-try:
-    _API_KEY = st.secrets.get("ANTHROPIC_API_KEY", "")
-except Exception:
-    _API_KEY = ""
+# ── Chat Popup ─────────────────────────────────────────────────────────────────
+# Injected directly into the Streamlit DOM via st.markdown so that
+# position:fixed is relative to the screen viewport (not an iframe viewport).
+# JavaScript is executed via the <img onerror> trick because React strips
+# <script> tags from dangerouslySetInnerHTML.
+_API_KEY = st.secrets.get("ANTHROPIC_API_KEY", "")
 
 _SYSTEM = (
     "You are an AI assistant representing Aprotiim Joardar's professional portfolio. "
     "Answer recruiter and hiring manager questions concisely and professionally. "
-    "Keep answers under 120 words unless a detailed answer is clearly needed.\n\n"
-    "ABOUT APROTIIM:\n"
-    "- AI Engineer, 5+ years experience. Ex-KPMG. University of Florida MS (GPA 3.91).\n"
-    "- Location: Florida, USA — open to relocation.\n"
-    "- Contact: aprotiim@gmail.com | github.com/aprotiim | linkedin.com/in/aprotiim-joardar-595074118/\n\n"
+    "Keep answers under 120 words. Use plain text only, no markdown formatting, "
+    "no asterisks, no bullet symbols.\n\n"
+    "ABOUT: AI Engineer, 5+ years experience. Ex-KPMG. University of Florida MS GPA 3.91. "
+    "Florida USA, open to relocation. Contact: aprotiim@gmail.com\n\n"
     "TARGET ROLES: AI Engineer, ML Engineer, Data Scientist, Applied LLM roles.\n\n"
-    "EDUCATION: M.S. Computer Science / AI-ML — University of Florida, GPA 3.91.\n\n"
-    "EXPERIENCE:\n"
-    "- KPMG: Data Engineer — built 20TB+ ERP data pipelines, enterprise analytics, "
+    "EDUCATION: M.S. Information Systems and Operations Management (Data Science Concentration), "
+    "University of Florida, GPA 3.91, Aug 2023 to May 2025. "
+    "Honors: Exxon Mobil Scholarship, 3x Directors Choice Academic Excellence Award.\n\n"
+    "EXPERIENCE: KPMG Data Engineer, built 20TB+ ERP data pipelines and enterprise analytics, "
     "translated business problems into scalable technical solutions.\n\n"
-    "SKILLS: Python, SQL, PySpark, PyTorch, TensorFlow, scikit-learn, Hugging Face, "
-    "LangChain, LlamaIndex, LLM fine-tuning, RAG, Agentic AI, Prompt Engineering, "
-    "Apache Spark, Airflow, dbt, ETL, PostgreSQL, Snowflake, BigQuery, AWS, GCP, MLflow, Docker.\n\n"
-    "KEY PROJECTS:\n"
-    "1. AI Agent Blog Planner & Writer — multi-agent LangGraph workflow, end-to-end blog creation.\n"
-    "2. Self-RAG — self-reflective retrieval LLM that evaluates its own retrieval quality.\n"
-    "3. Corrective RAG Knowledge System — confidence-scored RAG with web fallback, -40% hallucinations.\n\n"
-    "STRENGTHS: Enterprise data foundation + graduate ML depth + modern GenAI portfolio. "
-    "Builds AI that works in production, not just notebooks. Strong business and technical fluency.\n\n"
-    "AVAILABILITY: Open to full-time roles. Open to relocation."
+    "SKILLS: Python, SQL, PySpark, PyTorch, TensorFlow, LangChain, LlamaIndex, RAG, Agentic AI, "
+    "Prompt Engineering, Apache Spark, Airflow, dbt, ETL, PostgreSQL, Snowflake, BigQuery, "
+    "AWS, GCP, MLflow, Docker.\n\n"
+    "KEY PROJECTS: "
+    "1. AI Agent Blog Planner and Writer: multi-agent LangGraph workflow, end-to-end blog creation. "
+    "2. Self-RAG: self-reflective retrieval LLM that evaluates its own retrieval quality. "
+    "3. Corrective RAG Knowledge System: confidence-scored RAG with web fallback, "
+    "40 percent fewer hallucinations."
 )
 
-_CSS = (
-    "#cw-root{position:fixed;top:80px;right:24px;z-index:2147483647;"
-    "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}"
+_STARTERS = [
+    "What's your strongest technical skill?",
+    "Tell me about your AI projects",
+    "What was your role at KPMG?",
+    "What roles are you open to?",
+    "What makes you stand out?",
+    "Walk me through your best project",
+]
 
-    "#cw-btn{width:56px;height:56px;border-radius:50%;"
-    "background:linear-gradient(135deg,#0e7490,#6d28d9);border:none;cursor:pointer;"
-    "box-shadow:0 4px 24px rgba(110,231,249,.4);transition:transform .2s,box-shadow .2s;"
-    "display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;"
-    "margin-left:auto;}"
-    "#cw-btn:hover{transform:scale(1.09);box-shadow:0 6px 32px rgba(110,231,249,.55);}"
-
-    "#cw-panel{position:absolute;top:68px;right:0;width:340px;height:490px;"
-    "background:rgba(8,14,36,.97);border:1px solid rgba(148,163,184,.18);border-radius:18px;"
-    "box-shadow:0 20px 64px rgba(0,0,0,.65);display:flex;flex-direction:column;overflow:hidden;"
-    "transform:scale(.88) translateY(-14px);opacity:0;pointer-events:none;"
-    "transition:transform .28s cubic-bezier(.34,1.56,.64,1),opacity .2s;"
-    "transform-origin:top right;}"
-    "#cw-panel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}"
-
-    "#cw-header{padding:13px 14px;"
-    "background:linear-gradient(135deg,rgba(14,116,144,.22),rgba(109,40,217,.22));"
-    "border-bottom:1px solid rgba(148,163,184,.11);display:flex;align-items:center;"
-    "gap:10px;flex-shrink:0;}"
-    ".cw-av{width:34px;height:34px;border-radius:50%;"
-    "background:linear-gradient(135deg,#0e7490,#6d28d9);"
-    "display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}"
-    ".cw-ti{flex:1;}"
-    ".cw-ti strong{display:block;color:#e5eefb;font-size:.85rem;font-weight:600;}"
-    ".cw-ti span{color:#6ee7f9;font-size:.7rem;}"
-    "#cw-x{background:none;border:none;color:#94a9c9;cursor:pointer;font-size:17px;"
-    "padding:3px 7px;border-radius:6px;line-height:1;transition:background .15s,color .15s;}"
-    "#cw-x:hover{background:rgba(148,163,184,.12);color:#e5eefb;}"
-
-    "#cw-msgs{flex:1;overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;"
-    "gap:8px;scrollbar-width:thin;scrollbar-color:rgba(148,163,184,.15) transparent;}"
-    "#cw-msgs::-webkit-scrollbar{width:4px;}"
-    "#cw-msgs::-webkit-scrollbar-thumb{background:rgba(148,163,184,.15);border-radius:4px;}"
-
-    ".cw-m{max-width:85%;padding:8px 11px;border-radius:12px;font-size:.81rem;"
-    "line-height:1.55;word-wrap:break-word;white-space:pre-wrap;}"
-    ".cw-u{background:linear-gradient(135deg,rgba(14,116,144,.65),rgba(109,40,217,.55));"
-    "color:#e5eefb;align-self:flex-end;border-bottom-right-radius:3px;}"
-    ".cw-a{background:rgba(22,34,64,.9);color:#c8d8f0;"
-    "border:1px solid rgba(148,163,184,.1);align-self:flex-start;border-bottom-left-radius:3px;}"
-    ".cw-welcome{background:rgba(110,231,249,.05);border:1px solid rgba(110,231,249,.12);"
-    "color:#7a99bb;align-self:center;text-align:center;font-size:.77rem;"
-    "max-width:95%;border-radius:10px;}"
-
-    ".cw-typing{display:flex;gap:5px;align-items:center;padding:10px 14px !important;}"
-    ".cw-typing span{width:7px;height:7px;border-radius:50%;background:#6ee7f9;"
-    "animation:cwBounce 1.3s infinite;opacity:.55;}"
-    ".cw-typing span:nth-child(2){animation-delay:.2s;}"
-    ".cw-typing span:nth-child(3){animation-delay:.4s;}"
-    "@keyframes cwBounce{0%,60%,100%{transform:translateY(0);opacity:.55;}"
-    "30%{transform:translateY(-5px);opacity:1;}}"
-
-    "#cw-foot{padding:9px 10px;border-top:1px solid rgba(148,163,184,.1);"
-    "display:flex;gap:7px;align-items:center;background:rgba(5,10,28,.5);flex-shrink:0;}"
-    "#cw-inp{flex:1;background:rgba(22,34,64,.7);border:1px solid rgba(148,163,184,.18);"
-    "border-radius:10px;padding:8px 11px;color:#e5eefb;font-size:.81rem;outline:none;"
-    "transition:border-color .2s;}"
-    "#cw-inp::placeholder{color:#4a6280;}"
-    "#cw-inp:focus{border-color:rgba(110,231,249,.38);background:rgba(22,34,64,.95);}"
-    "#cw-snd{width:34px;height:34px;border-radius:9px;"
-    "background:linear-gradient(135deg,#0e7490,#6d28d9);border:none;color:#fff;"
-    "cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;"
-    "flex-shrink:0;transition:opacity .2s,transform .15s;}"
-    "#cw-snd:hover{opacity:.85;transform:scale(1.06);}"
-    "#cw-snd:disabled{opacity:.35;cursor:not-allowed;transform:none;}"
-
-    "@media(max-width:420px){"
-    "#cw-panel{width:calc(100vw - 32px);right:-4px;height:430px;top:68px;}"
-    "}"
+_starters_html = "".join(
+    f'<button class="cw-s" data-q="{s}">{s}</button>'
+    for s in _STARTERS
 )
 
-_JS = f"""
-(function(){{
-  var par = window.parent.document;
-  if(par.getElementById('cw-root')) return;
+st.markdown(f"""
+<style>
+#cw-fab{{position:fixed;top:95px;right:20px;z-index:2147483647;display:inline-flex;align-items:center;gap:8px;padding:10px 16px 10px 12px;background:linear-gradient(135deg,#0e7490,#6d28d9);color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.02em;border-radius:50px;border:none;cursor:pointer;white-space:nowrap;box-shadow:0 4px 24px rgba(110,231,249,.45);animation:cwp 2.5s infinite;transition:transform .15s;}}
+#cw-fab:hover{{transform:scale(1.04);}}
+@keyframes cwp{{0%,100%{{box-shadow:0 4px 24px rgba(110,231,249,.45),0 0 0 0 rgba(110,231,249,.4);}}70%{{box-shadow:0 4px 24px rgba(110,231,249,.45),0 0 0 12px rgba(110,231,249,0);}}}}
+#cw-panel{{position:fixed;top:148px;right:20px;z-index:2147483647;width:340px;max-width:calc(100vw - 40px);flex-direction:column;background:#0f172a;border:1px solid rgba(148,163,184,.2);border-radius:16px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.55);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}}
+#cw-hdr{{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;flex-shrink:0;border-bottom:1px solid rgba(148,163,184,.15);background:linear-gradient(90deg,rgba(14,116,144,.25),rgba(109,40,217,.25));}}
+#cw-hdr span{{color:#e5eefb;font-weight:700;font-size:.84rem;}}
+.cw-hb{{background:none;border:1px solid rgba(148,163,184,.2);color:#94a9c9;cursor:pointer;font-size:.7rem;padding:3px 7px;border-radius:6px;margin-left:4px;font-family:inherit;transition:background .15s;}}
+.cw-hb:hover{{background:rgba(148,163,184,.15);}}
+#cw-close{{border:none;font-size:.95rem;}}
+#cw-msgs{{flex:1;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:7px;min-height:50px;max-height:220px;}}
+.cw-b{{max-width:85%;padding:7px 11px;border-radius:11px;font-size:.81rem;line-height:1.55;word-wrap:break-word;}}
+.cw-b-u{{background:linear-gradient(135deg,#0e7490,#6d28d9);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}}
+.cw-b-a{{background:rgba(30,41,59,.95);color:#e5eefb;border:1px solid rgba(148,163,184,.12);align-self:flex-start;border-bottom-left-radius:3px;}}
+#cw-starters{{padding:7px 9px 5px;display:flex;flex-wrap:wrap;gap:5px;flex-shrink:0;border-bottom:1px solid rgba(148,163,184,.1);}}
+.cw-s{{background:rgba(14,116,144,.15);border:1px solid rgba(110,231,249,.22);color:#6ee7f9;font-size:.73rem;padding:4px 9px;border-radius:999px;cursor:pointer;white-space:nowrap;font-family:inherit;transition:background .15s;}}
+.cw-s:hover{{background:rgba(14,116,144,.32);}}
+#cw-inp-row{{display:flex;align-items:center;gap:5px;padding:9px;flex-shrink:0;border-top:1px solid rgba(148,163,184,.12);background:rgba(15,23,42,.85);}}
+#cw-inp{{flex:1;background:rgba(30,41,59,.85);border:1px solid rgba(148,163,184,.22);border-radius:7px;padding:6px 9px;color:#e5eefb;font-size:.81rem;font-family:inherit;outline:none;}}
+#cw-inp:focus{{border-color:rgba(110,231,249,.55);}}
+#cw-inp::placeholder{{color:#4a5568;}}
+#cw-snd{{background:linear-gradient(135deg,#0e7490,#6d28d9);border:none;border-radius:7px;color:#fff;cursor:pointer;padding:6px 11px;font-size:.81rem;flex-shrink:0;transition:opacity .15s;}}
+#cw-snd:hover{{opacity:.85;}}
+#cw-snd:disabled{{opacity:.35;cursor:not-allowed;}}
+.cw-d{{display:inline-block;width:6px;height:6px;background:#6ee7f9;border-radius:50%;margin:0 2px;animation:cwbd 1.2s infinite;}}
+.cw-d:nth-child(2){{animation-delay:.2s;}}
+.cw-d:nth-child(3){{animation-delay:.4s;}}
+@keyframes cwbd{{0%,60%,100%{{transform:translateY(0);}}30%{{transform:translateY(-5px);}}}}
+</style>
 
-  var KEY = {json.dumps(_API_KEY)};
-  var SYS = {json.dumps(_SYSTEM)};
-  var CSS = {json.dumps(_CSS)};
-  var hist = [];
-
-  var s = par.createElement('style');
-  s.textContent = CSS;
-  par.head.appendChild(s);
-
-  var root = par.createElement('div');
-  root.id = 'cw-root';
-  root.innerHTML = `
-    <div id="cw-panel">
-      <div id="cw-header">
-        <div class="cw-av">🤖</div>
-        <div class="cw-ti">
-          <strong>Ask about Aprotiim</strong>
-          <span>● AI Portfolio Assistant</span>
-        </div>
-        <button id="cw-x">✕</button>
-      </div>
-      <div id="cw-msgs">
-        <div class="cw-m cw-welcome">
-          Hi! Ask me anything about Aprotiim's experience, skills, or projects. 👋
-        </div>
-      </div>
-      <div id="cw-foot">
-        <input id="cw-inp" type="text" placeholder="Ask a question…" autocomplete="off"/>
-        <button id="cw-snd">↑</button>
-      </div>
+<button id="cw-fab">🤖 Talk to Aprotiim's AI Clone</button>
+<div id="cw-panel" style="display:none">
+  <div id="cw-hdr">
+    <span>🤖 Aprotiim's AI Profile</span>
+    <div>
+      <button class="cw-hb" id="cw-clr">New Chat</button>
+      <button class="cw-hb" id="cw-close">✕</button>
     </div>
-    <button id="cw-btn" title="Chat with Aprotiim's AI">💬</button>
-  `;
-  par.body.appendChild(root);
+  </div>
+  <div id="cw-msgs"></div>
+  <div id="cw-starters">{_starters_html}</div>
+  <div id="cw-inp-row">
+    <input id="cw-inp" type="text" placeholder="Ask about experience, projects…">
+    <button id="cw-snd">Send ➤</button>
+  </div>
+</div>
+""", unsafe_allow_html=True)
 
-  par.getElementById('cw-btn').addEventListener('click', toggle);
-  par.getElementById('cw-x').addEventListener('click', toggle);
-  par.getElementById('cw-snd').addEventListener('click', doSend);
-  par.getElementById('cw-inp').addEventListener('keydown', function(e){{
-    if(e.key === 'Enter' && !e.shiftKey){{ e.preventDefault(); doSend(); }}
-  }});
-
-  function toggle(){{
-    var panel = par.getElementById('cw-panel');
-    var btn   = par.getElementById('cw-btn');
-    var open  = panel.classList.toggle('open');
-    btn.textContent = open ? '✕' : '💬';
-    if(open) setTimeout(function(){{ par.getElementById('cw-inp').focus(); }}, 280);
-  }}
-
-  function doSend(){{
-    var inp = par.getElementById('cw-inp');
-    var snd = par.getElementById('cw-snd');
-    var txt = inp.value.trim();
-    if(!txt || snd.disabled) return;
-    inp.value = '';
-    snd.disabled = true;
-    addMsg('u', txt);
-    hist.push({{role:'user', content:txt}});
-    var typ = addTyping();
-
-    fetch('https://api.anthropic.com/v1/messages', {{
-      method: 'POST',
-      headers: {{
-        'x-api-key': KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-        'content-type': 'application/json'
-      }},
-      body: JSON.stringify({{
-        model: 'claude-haiku-4-5',
-        max_tokens: 512,
-        system: SYS,
-        messages: hist
-      }})
-    }})
-    .then(function(res){{
-      typ.remove();
-      if(res.ok) return res.json();
-      addMsg('a', 'Sorry, something went wrong. Please try again.');
-      snd.disabled = false; inp.focus();
-    }})
-    .then(function(d){{
-      if(!d) return;
-      var reply = d.content[0].text;
-      addMsg('a', reply);
-      hist.push({{role:'assistant', content:reply}});
-      snd.disabled = false; inp.focus();
-    }})
-    .catch(function(){{
-      typ.remove();
-      addMsg('a', 'Connection error. Please try again.');
-      snd.disabled = false; inp.focus();
+# Inject JS via components.html (same-origin iframe) so it reliably executes.
+# window.parent.document gives access to the main Streamlit page DOM.
+components.html(f"""<script>
+(function(){{
+  var K={json.dumps(_API_KEY)},Sys={json.dumps(_SYSTEM)};
+  function init(){{
+    var pdoc=window.parent.document;
+    var fab=pdoc.getElementById('cw-fab');
+    if(!fab){{setTimeout(init,50);return;}}
+    var panel=pdoc.getElementById('cw-panel'),
+        md=pdoc.getElementById('cw-msgs'),
+        stDiv=pdoc.getElementById('cw-starters'),
+        inp=pdoc.getElementById('cw-inp'),
+        snd=pdoc.getElementById('cw-snd'),
+        msgs=window.parent.__cwMsgs||[];
+    fab.onclick=function(){{panel.style.display=panel.style.display==='flex'?'none':'flex';}};
+    pdoc.getElementById('cw-close').onclick=function(){{panel.style.display='none';}};
+    pdoc.getElementById('cw-clr').onclick=function(){{msgs=[];window.parent.__cwMsgs=[];md.innerHTML='';stDiv.style.display='flex';}};
+    Array.prototype.forEach.call(pdoc.querySelectorAll('.cw-s'),function(b){{
+      b.onclick=function(){{stDiv.style.display='none';doSend(b.dataset.q);}};
     }});
+    inp.onkeydown=function(e){{if(e.key==='Enter'&&!e.shiftKey){{e.preventDefault();doSend(null);}}}};
+    snd.onclick=function(){{doSend(null);}};
+    function bub(r,t){{
+      var b=pdoc.createElement('div');b.className='cw-b cw-b-'+r;b.textContent=t;
+      md.appendChild(b);md.scrollTop=md.scrollHeight;
+    }}
+    function doSend(t){{
+      var m=t||inp.value.trim();if(!m)return;
+      inp.value='';msgs.push({{role:'user',content:m}});window.parent.__cwMsgs=msgs;bub('u',m);
+      var ty=pdoc.createElement('div');ty.id='cw-ty';ty.className='cw-b cw-b-a';
+      ty.innerHTML='<span class="cw-d"></span><span class="cw-d"></span><span class="cw-d"></span>';
+      md.appendChild(ty);md.scrollTop=md.scrollHeight;
+      inp.disabled=snd.disabled=true;
+      fetch('https://api.anthropic.com/v1/messages',{{
+        method:'POST',
+        headers:{{'Content-Type':'application/json','x-api-key':K,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}},
+        body:JSON.stringify({{model:'claude-haiku-4-5',max_tokens:350,system:Sys,messages:msgs}})
+      }}).then(function(r){{return r.json();}}).then(function(d){{
+        var ty=pdoc.getElementById('cw-ty');if(ty)ty.remove();
+        var rep=(d.content&&d.content[0]&&d.content[0].text)?d.content[0].text:'Sorry, try again.';
+        msgs.push({{role:'assistant',content:rep}});window.parent.__cwMsgs=msgs;bub('a',rep);
+      }}).catch(function(){{
+        var ty=pdoc.getElementById('cw-ty');if(ty)ty.remove();
+        bub('a','Connection error. Please try again.');
+      }}).finally(function(){{inp.disabled=snd.disabled=false;inp.focus();}});
+    }}
   }}
-
-  function addMsg(role, text){{
-    var c = par.getElementById('cw-msgs');
-    var d = par.createElement('div');
-    d.className = 'cw-m cw-' + role;
-    d.textContent = text;
-    c.appendChild(d);
-    c.scrollTop = c.scrollHeight;
-    return d;
-  }}
-
-  function addTyping(){{
-    var c = par.getElementById('cw-msgs');
-    var d = par.createElement('div');
-    d.className = 'cw-m cw-a cw-typing';
-    d.innerHTML = '<span></span><span></span><span></span>';
-    c.appendChild(d);
-    c.scrollTop = c.scrollHeight;
-    return d;
-  }}
+  init();
 }})();
-"""
-
-components.html(f"<script>{_JS}</script>", height=0)
+</script>""", height=0, scrolling=False)

@@ -1,150 +1,144 @@
+from pathlib import Path
 import streamlit as st
+import anthropic
 
-st.title("Chat with Aprotiim's AI")
-
-SYSTEM_PROMPT = """You are an AI assistant representing Aprotiim Joardar's professional portfolio. \
-Answer questions from recruiters and hiring managers about Aprotiim's background, skills, experience, and projects. \
-Be concise, professional, and enthusiastic. If you don't know something specific, say so honestly.
-
-Here is Aprotiim's full professional background:
-
-## Personal
-- Name: Aprotiim Joardar
-- Location: Florida, United States (open to relocation)
-- Email: aprotiim@gmail.com
-- GitHub: github.com/aprotiim
-- LinkedIn: linkedin.com/in/aprotiim-joardar-595074118/
-
-## Summary
-AI Engineer with 5+ years of experience building production-grade LLM systems, scalable data pipelines, \
-and AI products. Strong background in enterprise data engineering (KPMG), graduate-level ML research \
-(University of Florida, GPA 3.91), and modern GenAI portfolio including agentic workflows, RAG systems, \
-and NLP applications.
-
-## Target Roles
-AI Engineer, ML Engineer, Data Scientist, Applied LLM roles
-
-## Education
-- M.S. in Computer Science / AI/ML — University of Florida, GPA: 3.91
-- Focus areas: Machine Learning, Forecasting, AI Systems
-
-## Work Experience
-### KPMG — Data Engineer / Analytics
-- Built large-scale ETL pipelines handling 20TB+ of ERP data
-- Designed and maintained complex data architectures for enterprise clients
-- Developed analytics solutions for business intelligence and decision-making
-- Worked across consulting and research settings, translating business problems into scalable technical solutions
-
-## Technical Skills
-- **Languages**: Python, SQL, Scala
-- **ML/AI**: PyTorch, TensorFlow, scikit-learn, Hugging Face Transformers, LangChain, LlamaIndex
-- **GenAI**: LLM fine-tuning, RAG (Corrective RAG, Self-RAG), Agentic workflows, Prompt engineering
-- **Data Engineering**: PySpark, Apache Spark, Airflow, dbt, ETL pipeline design
-- **Databases**: PostgreSQL, MySQL, MongoDB, Snowflake, BigQuery
-- **Cloud**: AWS (S3, EC2, Lambda, SageMaker), GCP
-- **MLOps**: MLflow, Docker, CI/CD, model monitoring
-- **Visualization**: Tableau, Power BI, Matplotlib, Seaborn
-
-## Key Projects
-
-### 1. AI Agent Blog Planner & Writer (Agentic AI)
-Multi-agent workflow that plans, researches, and writes full blog posts end-to-end with citations and images.
-- Uses LangGraph for orchestration, multiple specialized agents
-- Integrates web search, image generation, and citation management
-- GitHub: github.com/aprotiim/AI-Agent_Blog-planner-and-writer
-
-### 2. Self-RAG: Self-Reflective Retrieval (Agentic RAG)
-LLM that evaluates its own retrieval decisions, filters relevance, verifies grounding, and rewrites until quality thresholds are met.
-- Implements self-reflection loops to reduce hallucinations
-- Dynamic retrieval quality scoring
-- GitHub: github.com/aprotiim/Self_RAG
-
-### 3. Corrective RAG Knowledge System (RAG / Evaluation)
-Corrective RAG that scores retrieval confidence and falls back to web search when local context is weak — reducing hallucinations by 40%.
-- Adaptive retrieval strategy with confidence scoring
-- Web search fallback for low-confidence retrievals
-- GitHub: github.com/aprotiim/C-RAG-Knowledge-System
-
-## What Makes Aprotiim Different
-- Enterprise data foundation: built pipelines at KPMG that had real business impact at scale
-- Graduate-level ML depth: strong theoretical and practical ML background from University of Florida
-- Modern AI portfolio: focused on current hiring demand — agentic AI, RAG, LLM systems
-- Systems thinking: builds AI that works outside notebooks, in real-world, messy environments
-- Business fluency: experience translating complex business problems into technical solutions
-
-## Availability
-Open to full-time opportunities. Open to relocation from Florida.
-"""
-
-st.markdown(
-    """
-    <div class='info-card' style='margin-bottom:1.5rem;'>
-        <h4>Ask me anything about Aprotiim</h4>
-        <p style='margin:0;color:#94a9c9;font-size:0.9rem;'>
-        I'm an AI assistant that can answer questions about Aprotiim's background, skills, projects, and experience.
-        Great for recruiters looking to learn more quickly.
-        </p>
-    </div>
-    """,
-    unsafe_allow_html=True,
+# ── System prompts ────────────────────────────────────────────────────────────
+_SYSTEM = (
+    "You are an AI assistant representing Aprotiim Joardar's professional portfolio. "
+    "Answer recruiter and hiring manager questions concisely and professionally. "
+    "Keep answers under 120 words. Do NOT use markdown formatting like **bold** or bullet points with asterisks — use plain text only.\n\n"
+    "ABOUT APROTIIM:\n"
+    "- AI Engineer, 5+ years experience. Ex-KPMG. University of Florida MS (GPA 3.91).\n"
+    "- Location: Florida, USA — open to relocation.\n"
+    "- Contact: aprotiim@gmail.com | github.com/aprotiim\n\n"
+    "TARGET ROLES: AI Engineer, ML Engineer, Data Scientist, Applied LLM roles.\n\n"
+    "EDUCATION: M.S. Information Systems & Operations Management (Data Science Concentration) — University of Florida, GPA 3.91. Aug 2023–May 2025. Honors: Exxon Mobil Scholarship, 3x Director's Choice Academic Excellence Award.\n\n"
+    "EXPERIENCE:\n"
+    "- KPMG: Data Engineer — built 20TB+ ERP data pipelines, enterprise analytics, "
+    "translated business problems into scalable technical solutions.\n\n"
+    "SKILLS: Python, SQL, PySpark, PyTorch, TensorFlow, scikit-learn, Hugging Face, "
+    "LangChain, LlamaIndex, LLM fine-tuning, RAG, Agentic AI, Prompt Engineering, "
+    "Apache Spark, Airflow, dbt, ETL, PostgreSQL, Snowflake, BigQuery, AWS, GCP, MLflow, Docker.\n\n"
+    "KEY PROJECTS:\n"
+    "1. AI Agent Blog Planner & Writer — multi-agent LangGraph workflow, end-to-end blog creation.\n"
+    "2. Self-RAG — self-reflective retrieval LLM that evaluates its own retrieval quality.\n"
+    "3. Corrective RAG Knowledge System — confidence-scored RAG with web fallback, -40% hallucinations.\n\n"
+    "STRENGTHS: Enterprise data foundation + graduate ML depth + modern GenAI portfolio. "
+    "Builds AI that works in production, not just notebooks.\n\n"
+    "AVAILABILITY: Open to full-time roles. Open to relocation."
 )
 
-# Initialise chat history
-if "chat_messages" not in st.session_state:
-    st.session_state.chat_messages = []
+_FOLLOWUP_SYSTEM = (
+    "Based on the last exchange in a recruiter-portfolio chat, suggest exactly 3 short follow-up "
+    "questions a recruiter might ask next. Each question must be under 8 words. "
+    "Return only the 3 questions, one per line, no numbering, no extra text."
+)
 
-# Render existing messages
-for msg in st.session_state.chat_messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+_STARTERS = [
+    "What's your strongest technical skill?",
+    "Tell me about your AI projects",
+    "What was your role at KPMG?",
+    "What roles are you open to?",
+    "What makes you stand out?",
+    "Walk me through your best project",
+]
 
-# Chat input
-if prompt := st.chat_input("Ask about Aprotiim's experience, skills, or projects…"):
-    # Show user message
-    st.session_state.chat_messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
+# ── Helpers ───────────────────────────────────────────────────────────────────
+def _client() -> anthropic.Anthropic:
+    return anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"])
 
-    # Call Claude
-    try:
-        import anthropic
 
-        api_key = st.secrets.get("ANTHROPIC_API_KEY", None)
-        if not api_key:
-            st.error("API key not configured. Please add ANTHROPIC_API_KEY to Streamlit secrets.")
-            st.stop()
+def _chat(messages: list) -> str:
+    r = _client().messages.create(
+        model="claude-haiku-4-5",
+        max_tokens=512,
+        system=_SYSTEM,
+        messages=messages,
+    )
+    return r.content[0].text
 
-        client = anthropic.Anthropic(api_key=api_key)
 
-        messages_payload = [
-            {"role": m["role"], "content": m["content"]}
-            for m in st.session_state.chat_messages
-        ]
+def _follow_ups(user_msg: str, assistant_msg: str) -> list[str]:
+    r = _client().messages.create(
+        model="claude-haiku-4-5",
+        max_tokens=80,
+        system=_FOLLOWUP_SYSTEM,
+        messages=[{
+            "role": "user",
+            "content": f"User: {user_msg}\nAssistant: {assistant_msg}",
+        }],
+    )
+    lines = [l.strip().lstrip("•-– ") for l in r.content[0].text.strip().splitlines() if l.strip()]
+    return lines[:3]
 
-        with st.chat_message("assistant"):
-            response_placeholder = st.empty()
-            full_response = ""
 
-            with client.messages.stream(
-                model="claude-haiku-4-5",
-                max_tokens=1024,
-                system=SYSTEM_PROMPT,
-                messages=messages_payload,
-            ) as stream:
-                for text in stream.text_stream:
-                    full_response += text
-                    response_placeholder.markdown(full_response + "▌")
-            response_placeholder.markdown(full_response)
+def _process(prompt: str) -> None:
+    """Add user message, get reply, store follow-ups — all in session state."""
+    st.session_state.msgs.append({"role": "user", "content": prompt})
+    reply = _chat(st.session_state.msgs)
+    st.session_state.msgs.append({"role": "assistant", "content": reply})
+    st.session_state.follow_ups = _follow_ups(prompt, reply)
 
-        st.session_state.chat_messages.append({"role": "assistant", "content": full_response})
 
-    except ImportError:
-        st.error("anthropic package not installed. Run: pip install anthropic")
-    except Exception as e:
-        st.error(f"Error: {e}")
+# ── Init session state ────────────────────────────────────────────────────────
+if "msgs" not in st.session_state:
+    st.session_state.msgs = []
+if "follow_ups" not in st.session_state:
+    st.session_state.follow_ups = []
 
-# Clear chat button
-if st.session_state.chat_messages:
-    if st.button("Clear conversation", use_container_width=False):
-        st.session_state.chat_messages = []
+# Process any pending button-triggered prompt BEFORE rendering
+if "pending" in st.session_state:
+    with st.spinner(""):
+        _process(st.session_state.pop("pending"))
+
+# ── Page header ───────────────────────────────────────────────────────────────
+st.title("Talk to my AI profile")
+st.caption("Ask about my projects, experience, skills, or technical decisions.")
+
+# ── Starter buttons (only when conversation is empty) ────────────────────────
+if not st.session_state.msgs:
+    st.markdown("#### Quick questions to get started")
+    row1 = st.columns(3)
+    row2 = st.columns(3)
+    for i, prompt in enumerate(_STARTERS):
+        col = row1[i] if i < 3 else row2[i - 3]
+        with col:
+            if st.button(prompt, use_container_width=True, key=f"s{i}"):
+                st.session_state.pending = prompt
+                st.rerun()
+    st.divider()
+
+# ── Chat history ──────────────────────────────────────────────────────────────
+if st.session_state.msgs:
+    with st.container(height=420, border=False):
+        for msg in st.session_state.msgs:
+            with st.chat_message(msg["role"]):
+                st.markdown(msg["content"])
+
+# ── Follow-up suggestion buttons ─────────────────────────────────────────────
+if st.session_state.follow_ups:
+    st.markdown(
+        "<p style='font-size:0.78rem;color:#94a9c9;margin:0.6rem 0 0.35rem 0;"
+        "font-weight:600;letter-spacing:0.03em;'>SUGGESTED FOLLOW-UPS</p>",
+        unsafe_allow_html=True,
+    )
+    fcols = st.columns(len(st.session_state.follow_ups))
+    for i, q in enumerate(st.session_state.follow_ups):
+        with fcols[i]:
+            if st.button(q, use_container_width=True, key=f"f{i}_{len(st.session_state.msgs)}"):
+                st.session_state.pending = q
+                st.rerun()
+
+# ── Chat input ────────────────────────────────────────────────────────────────
+if user_input := st.chat_input("Ask about experience, projects, skills…"):
+    with st.spinner(""):
+        _process(user_input)
+    st.rerun()
+
+# ── Clear button ─────────────────────────────────────────────────────────────
+if st.session_state.msgs:
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("Clear conversation", type="secondary"):
+        st.session_state.msgs = []
+        st.session_state.follow_ups = []
         st.rerun()
