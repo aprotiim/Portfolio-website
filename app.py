@@ -25,6 +25,7 @@ nav_pages = [
     ("pages/3_Work_Experience.py", "💼 Experience"),
     ("pages/4_Education.py",       "🎓 Education"),
     ("pages/5_Contact.py",         "📬 Contact"),
+    ("pages/6_Chat.py",            "🤖 Ask AI"),
 ]
 
 pg = st.navigation([
@@ -34,6 +35,7 @@ pg = st.navigation([
     st.Page("pages/3_Work_Experience.py", title="Work Experience", icon="💼"),
     st.Page("pages/4_Education.py",       title="Education",       icon="🎓"),
     st.Page("pages/5_Contact.py",         title="Contact",         icon="📬"),
+    st.Page("pages/6_Chat.py",            title="Ask AI",          icon="🤖"),
 ])
 
 # ── Mobile hamburger (only visible on mobile via CSS) ─────────────────────────
